@@ -6,16 +6,16 @@ async function devolverFactuas() {
   // añadir factura tipo ingreso en fila
   const tipoIngreso = await listaFacturas
     .filter(factura => factura.tipo === "ingreso");
-  console.log(tipoIngreso);
+  // console.log(tipoIngreso);
   for (const factura of await tipoIngreso) {
     const nuevaFila = listaMolde.cloneNode(true);
     nuevaFila.classList.remove("off");
     nuevaFila.querySelector(".numero").textContent = factura.id;
     nuevaFila.querySelector(".concepto").textContent = factura.concepto;
-    console.log(factura.concepto);
     nuevaFila.querySelector(".fecha").textContent = factura.fecha;
     nuevaFila.querySelector(".base").textContent = factura.base;
-    nuevaFila.querySelector(".iva").textContent = factura.tipoIva;
+    const totalIva = `${Math.round((factura.tipoIva * factura.base) / 100)}€ (21%)`;
+    nuevaFila.querySelector(".iva").textContent = totalIva;
     nuevaFila.querySelector(".total").textContent = factura.numero;
     nuevaFila.querySelector(".estado").textContent = factura.abonada;
     nuevaFila.querySelector(".vence").textContent = factura.vencimiento;
