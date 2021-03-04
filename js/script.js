@@ -22,8 +22,25 @@ async function devolverFactuas() {
     nuevaFila.querySelector(".estado").textContent = factura.abonada;
     const numeroVence = Number(factura.vencimiento);
     const objetoVence = luxon.DateTime.fromMillis(numeroVence);
-    nuevaFila.querySelector(".vence").textContent = objetoVence.toLocaleString();
-    document.querySelector(".lista-facturas").append(nuevaFila);
+    const hoy = luxon.DateTime.now();
+
+    const diferencia = `${Math.round(hoy.diff(objetoVence, ['days']).days)}`;
+
+    if (nuevaFila.querySelector(".estado").innerText === "true") {
+      nuevaFila.querySelector(".vence").textContent = "-"
+    } else {
+      if (diferencia <= 0) {
+        nuevaFila.querySelector(".vence").textContent = objetoVence.toLocaleString() + " Faltan: " + diferencia * (-1);
+        nuevaFila.querySelector(".vence").classList.remove("table-danger");
+        nuevaFila.querySelector(".vence").classList.add("table-success");
+      } else {
+        nuevaFila.querySelector(".vence").textContent = objetoVence.toLocaleString() + " Pasan: " + diferencia;
+        nuevaFila.querySelector(".vence").classList.remove("table-success");
+        nuevaFila.querySelector(".vence").classList.add("table-danger");
+
+      }
+
+    }
 
     //Estado Factura abonada
     if (nuevaFila.querySelector(".estado").innerText === "true") {
@@ -33,7 +50,7 @@ async function devolverFactuas() {
       nuevaFila.querySelector(".estado").classList.add("table-danger");
       nuevaFila.querySelector(".estado").classList.remove("table-success");
     }
-
+    document.querySelector(".lista-facturas").append(nuevaFila);
   }
 }
 
