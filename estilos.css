@@ -229,5 +229,5 @@ button[type="submit"] {
   }
 }
 tr.off {
-  display: hidden;
+  display: none;
 }
