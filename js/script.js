@@ -18,11 +18,38 @@ async function devolverFactuas() {
     nuevaFila.querySelector(".base").textContent = factura.base;
     const totalIva = `${Math.round((factura.tipoIva * factura.base) / 100)}€ (21%)`;
     nuevaFila.querySelector(".iva").textContent = totalIva;
-    nuevaFila.querySelector(".total").textContent = factura.numero;
+    nuevaFila.querySelector(".total").textContent = parseInt(`${Math.round((factura.tipoIva * factura.base) / 100)}`) + factura.base;
     nuevaFila.querySelector(".estado").textContent = factura.abonada;
     const numeroVence = Number(factura.vencimiento);
     const objetoVence = luxon.DateTime.fromMillis(numeroVence);
-    nuevaFila.querySelector(".vence").textContent = objetoVence.toLocaleString();
+    const hoy = luxon.DateTime.now();
+
+    const diferencia = `${Math.round(hoy.diff(objetoVence, ['days']).days)}`;
+
+    if (nuevaFila.querySelector(".estado").innerText === "true") {
+      nuevaFila.querySelector(".vence").textContent = "-"
+    } else {
+      if (diferencia <= 0) {
+        nuevaFila.querySelector(".vence").textContent = objetoVence.toLocaleString() + " Faltan: " + diferencia * (-1);
+        nuevaFila.querySelector(".vence").classList.remove("table-danger");
+        nuevaFila.querySelector(".vence").classList.add("table-success");
+      } else {
+        nuevaFila.querySelector(".vence").textContent = objetoVence.toLocaleString() + " Pasan: " + diferencia;
+        nuevaFila.querySelector(".vence").classList.remove("table-success");
+        nuevaFila.querySelector(".vence").classList.add("table-danger");
+
+      }
+
+    }
+
+    //Estado Factura abonada
+    if (nuevaFila.querySelector(".estado").innerText === "true") {
+      nuevaFila.querySelector(".estado").classList.remove("table-danger");
+      nuevaFila.querySelector(".estado").classList.add("table-success");
+    } else {
+      nuevaFila.querySelector(".estado").classList.add("table-danger");
+      nuevaFila.querySelector(".estado").classList.remove("table-success");
+    }
     document.querySelector(".lista-facturas").append(nuevaFila);
   }
 }
@@ -42,3 +69,5 @@ const fechaObjeto = luxon.DateTime.fromISO(fecha);
 const ts = new Date().getTime(); // 1516717417146
 const dt = luxon.DateTime.fromMillis(ts); // { ts: 2018-01-23T09:23:37.146-05:00 ...
 // console.log(ts);
+
+
