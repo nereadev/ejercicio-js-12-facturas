@@ -12,13 +12,17 @@ async function devolverFactuas() {
     nuevaFila.classList.remove("off");
     nuevaFila.querySelector(".numero").textContent = factura.id;
     nuevaFila.querySelector(".concepto").textContent = factura.concepto;
-    nuevaFila.querySelector(".fecha").textContent = factura.fecha;
+    const numeroFecha = Number(factura.fecha);
+    const objetofecha = luxon.DateTime.fromMillis(numeroFecha);
+    nuevaFila.querySelector(".fecha").textContent = objetofecha.toLocaleString();
     nuevaFila.querySelector(".base").textContent = factura.base;
     const totalIva = `${Math.round((factura.tipoIva * factura.base) / 100)}€ (21%)`;
     nuevaFila.querySelector(".iva").textContent = totalIva;
     nuevaFila.querySelector(".total").textContent = factura.numero;
     nuevaFila.querySelector(".estado").textContent = factura.abonada;
-    nuevaFila.querySelector(".vence").textContent = factura.vencimiento;
+    const numeroVence = Number(factura.vencimiento);
+    const objetoVence = luxon.DateTime.fromMillis(numeroVence);
+    nuevaFila.querySelector(".vence").textContent = objetoVence.toLocaleString();
     document.querySelector(".lista-facturas").append(nuevaFila);
   }
 }
@@ -28,6 +32,13 @@ const listaMolde = document.querySelector(".lista-dummy");
 // listaMolde.textContent = "";
 // console.log(listaMolde);
 listaMolde.classList.add("off");
-
 document.querySelector(".lista-facturas").textContent = "";
 // console.log(listaMolde);
+
+const fecha = new Date("2016-05-25T09:08:34.123+06:00");
+const fechaObjeto = luxon.DateTime.fromISO(fecha);
+// console.log(fechaObjeto.ts);
+
+const ts = new Date().getTime(); // 1516717417146
+const dt = luxon.DateTime.fromMillis(ts); // { ts: 2018-01-23T09:23:37.146-05:00 ...
+// console.log(ts);
