@@ -19,31 +19,28 @@ async function devolverFactuas() {
     const numeroFecha = Number(factura.fecha);
     const objetofecha = luxon.DateTime.fromMillis(numeroFecha);
     nuevaFila.querySelector(".fecha").textContent = objetofecha.toLocaleString();
-    nuevaFila.querySelector(".base").textContent = `${factura.base}€`;
-    const totalIva = `${Math.round((factura.tipoIva * factura.base) / 100)}€ (21%)`;
+    nuevaFila.querySelector(".base").textContent = factura.base + "€";
+    const totalIva = `${Math.round((factura.tipoIva * factura.base) / 100)}€ (${factura.tipoIva}%)`;
     nuevaFila.querySelector(".iva").textContent = totalIva;
-    nuevaFila.querySelector(".total").textContent = `${parseInt(`${Math.round((factura.tipoIva * factura.base) / 100)}`) + factura.base}€`;
-    nuevaFila.querySelector(".estado").textContent = factura.abonada;
+    nuevaFila.querySelector(".total").textContent = parseInt(`${Math.round((factura.tipoIva * factura.base) / 100)}`) + factura.base + "€";
+    nuevaFila.querySelector(".estado").textContent = factura.abonada === true ? "Abonada" : "Pendiente";
+
     const numeroVence = Number(factura.vencimiento);
     const objetoVence = luxon.DateTime.fromMillis(numeroVence);
     const hoy = luxon.DateTime.now();
 
     const diferencia = `${Math.round(hoy.diff(objetoVence, ["days"]).days)}`;
 
-    if (nuevaFila.querySelector(".estado").innerText === "true") {
-      nuevaFila.querySelector(".vence").textContent = "-";
-    } else if (diferencia <= 0) {
-      nuevaFila.querySelector(".vence").textContent = `${objetoVence.toLocaleString()} (faltan ${diferencia * (-1)} días)`;
-      nuevaFila.querySelector(".vence").classList.remove("table-danger");
-      nuevaFila.querySelector(".vence").classList.add("table-success");
+    if (nuevaFila.querySelector(".estado").innerText === "Abonada") {
+      nuevaFila.querySelector(".vence").textContent = "-"
     } else {
       nuevaFila.querySelector(".vence").textContent = `${objetoVence.toLocaleString()} (hace ${diferencia} días)`;
       nuevaFila.querySelector(".vence").classList.remove("table-success");
       nuevaFila.querySelector(".vence").classList.add("table-danger");
     }
 
-    // Estado Factura abonada
-    if (nuevaFila.querySelector(".estado").innerText === "true") {
+    //Estado Factura abonada
+    if (nuevaFila.querySelector(".estado").innerText === "Abonada") {
       nuevaFila.querySelector(".estado").classList.remove("table-danger");
       nuevaFila.querySelector(".estado").classList.add("table-success");
       nuevaFila.querySelector(".estado").textContent = "Abonada";
