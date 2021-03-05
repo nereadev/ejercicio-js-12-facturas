@@ -6,7 +6,11 @@ async function devolverFactuas() {
   // añadir factura tipo ingreso en fila
   const tipoIngreso = await listaFacturas
     .filter(factura => factura.tipo === "ingreso");
-  // console.log(tipoIngreso);
+
+  let resultadoTotal = 0;
+  let ivaTotal = 0;
+  let baseTotal = 0;
+
   for (const factura of await tipoIngreso) {
     const nuevaFila = listaMolde.cloneNode(true);
     nuevaFila.classList.remove("off");
@@ -37,9 +41,7 @@ async function devolverFactuas() {
         nuevaFila.querySelector(".vence").textContent = objetoVence.toLocaleString() + " Pasan: " + diferencia;
         nuevaFila.querySelector(".vence").classList.remove("table-success");
         nuevaFila.querySelector(".vence").classList.add("table-danger");
-
       }
-
     }
 
     //Estado Factura abonada
@@ -50,24 +52,28 @@ async function devolverFactuas() {
       nuevaFila.querySelector(".estado").classList.add("table-danger");
       nuevaFila.querySelector(".estado").classList.remove("table-success");
     }
+
+    resultadoTotal = resultadoTotal + parseInt(`${Math.round((factura.tipoIva * factura.base) / 100)}`) + factura.base;
+    ivaTotal = ivaTotal + parseInt(`${Math.round((factura.tipoIva * factura.base) / 100)}`);
+    baseTotal = baseTotal + parseInt(factura.base);
+
     document.querySelector(".lista-facturas").append(nuevaFila);
   }
+
+  document.querySelector(".resultado-total").innerText = resultadoTotal;
+  document.querySelector(".iva-total").innerText = ivaTotal;
+  document.querySelector(".base-total").innerText = baseTotal;
 }
 
 // crear fila "dummy"
 const listaMolde = document.querySelector(".lista-dummy");
 // listaMolde.textContent = "";
-// console.log(listaMolde);
+
 listaMolde.classList.add("off");
 document.querySelector(".lista-facturas").textContent = "";
-// console.log(listaMolde);
 
 const fecha = new Date("2016-05-25T09:08:34.123+06:00");
 const fechaObjeto = luxon.DateTime.fromISO(fecha);
-// console.log(fechaObjeto.ts);
 
 const ts = new Date().getTime(); // 1516717417146
 const dt = luxon.DateTime.fromMillis(ts); // { ts: 2018-01-23T09:23:37.146-05:00 ...
-// console.log(ts);
-
-
