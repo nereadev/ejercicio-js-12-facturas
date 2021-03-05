@@ -19,18 +19,18 @@ async function devolverFactuas() {
     const numeroFecha = Number(factura.fecha);
     const objetofecha = luxon.DateTime.fromMillis(numeroFecha);
     nuevaFila.querySelector(".fecha").textContent = objetofecha.toLocaleString();
-    nuevaFila.querySelector(".base").textContent = factura.base;
-    const totalIva = `${Math.round((factura.tipoIva * factura.base) / 100)}€ (21%)`;
+    nuevaFila.querySelector(".base").textContent = factura.base + "€";
+    const totalIva = `${Math.round((factura.tipoIva * factura.base) / 100)}€ (${factura.tipoIva}%)`;
     nuevaFila.querySelector(".iva").textContent = totalIva;
-    nuevaFila.querySelector(".total").textContent = parseInt(`${Math.round((factura.tipoIva * factura.base) / 100)}`) + factura.base;
-    nuevaFila.querySelector(".estado").textContent = factura.abonada;
+    nuevaFila.querySelector(".total").textContent = parseInt(`${Math.round((factura.tipoIva * factura.base) / 100)}`) + factura.base + "€";
+    nuevaFila.querySelector(".estado").textContent = factura.abonada === true ? "Abonada" : "Pendiente";
     const numeroVence = Number(factura.vencimiento);
     const objetoVence = luxon.DateTime.fromMillis(numeroVence);
     const hoy = luxon.DateTime.now();
 
     const diferencia = `${Math.round(hoy.diff(objetoVence, ['days']).days)}`;
 
-    if (nuevaFila.querySelector(".estado").innerText === "true") {
+    if (nuevaFila.querySelector(".estado").innerText === "Abonada") {
       nuevaFila.querySelector(".vence").textContent = "-"
     } else {
       if (diferencia <= 0) {
@@ -45,7 +45,7 @@ async function devolverFactuas() {
     }
 
     //Estado Factura abonada
-    if (nuevaFila.querySelector(".estado").innerText === "true") {
+    if (nuevaFila.querySelector(".estado").innerText === "Abonada") {
       nuevaFila.querySelector(".estado").classList.remove("table-danger");
       nuevaFila.querySelector(".estado").classList.add("table-success");
     } else {
@@ -60,9 +60,9 @@ async function devolverFactuas() {
     document.querySelector(".lista-facturas").append(nuevaFila);
   }
 
-  document.querySelector(".resultado-total").innerText = resultadoTotal;
-  document.querySelector(".iva-total").innerText = ivaTotal;
-  document.querySelector(".base-total").innerText = baseTotal;
+  document.querySelector(".resultado-total").innerText = resultadoTotal + "€";
+  document.querySelector(".iva-total").innerText = ivaTotal + "€";
+  document.querySelector(".base-total").innerText = baseTotal + "€";
 }
 
 // crear fila "dummy"
