@@ -34,9 +34,16 @@ async function devolverFactuas() {
     if (nuevaFila.querySelector(".estado").innerText === "Abonada") {
       nuevaFila.querySelector(".vence").textContent = "-"
     } else {
-      nuevaFila.querySelector(".vence").textContent = `${objetoVence.toLocaleString()} (hace ${diferencia} días)`;
-      nuevaFila.querySelector(".vence").classList.remove("table-success");
-      nuevaFila.querySelector(".vence").classList.add("table-danger");
+      if (diferencia >= 0) {
+        nuevaFila.querySelector(".vence").textContent = `${objetoVence.toLocaleString()} (Pasan ${diferencia} días)`;
+        nuevaFila.querySelector(".vence").classList.remove("table-succes");
+        nuevaFila.querySelector(".vence").classList.add("table-danger");
+      } else {
+        nuevaFila.querySelector(".vence").textContent = `${objetoVence.toLocaleString()} (Faltan ${diferencia * (-1)} días)`;
+        nuevaFila.querySelector(".vence").classList.remove("table-danger");
+        nuevaFila.querySelector(".vence").classList.add("table-success");
+      }
+
     }
 
     //Estado Factura abonada
