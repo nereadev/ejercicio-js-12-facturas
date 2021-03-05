@@ -46,9 +46,11 @@ async function devolverFactuas() {
     if (nuevaFila.querySelector(".estado").innerText === "true") {
       nuevaFila.querySelector(".estado").classList.remove("table-danger");
       nuevaFila.querySelector(".estado").classList.add("table-success");
+      nuevaFila.querySelector(".estado").textContent = "Abonada";
     } else {
       nuevaFila.querySelector(".estado").classList.add("table-danger");
       nuevaFila.querySelector(".estado").classList.remove("table-success");
+      nuevaFila.querySelector(".estado").textContent = "Pendiente";
     }
 
     resultadoTotal = resultadoTotal + parseInt(`${Math.round((factura.tipoIva * factura.base) / 100)}`) + factura.base;
@@ -66,12 +68,5 @@ async function devolverFactuas() {
 // crear fila "dummy"
 const listaMolde = document.querySelector(".lista-dummy");
 // listaMolde.textContent = "";
-
 listaMolde.classList.add("off");
 document.querySelector(".lista-facturas").textContent = "";
-
-const fecha = new Date("2016-05-25T09:08:34.123+06:00");
-const fechaObjeto = luxon.DateTime.fromISO(fecha);
-
-const ts = new Date().getTime(); // 1516717417146
-const dt = luxon.DateTime.fromMillis(ts); // { ts: 2018-01-23T09:23:37.146-05:00 ...
