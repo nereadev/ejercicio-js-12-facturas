@@ -24,56 +24,46 @@ async function devolverFactuas() {
     nuevaFila.querySelector(".iva").textContent = totalIva;
     nuevaFila.querySelector(".total").textContent = parseInt(`${Math.round((factura.tipoIva * factura.base) / 100)}`) + factura.base + "€";
     nuevaFila.querySelector(".estado").textContent = factura.abonada === true ? "Abonada" : "Pendiente";
+
     const numeroVence = Number(factura.vencimiento);
     const objetoVence = luxon.DateTime.fromMillis(numeroVence);
     const hoy = luxon.DateTime.now();
 
-    const diferencia = `${Math.round(hoy.diff(objetoVence, ['days']).days)}`;
+    const diferencia = `${Math.round(hoy.diff(objetoVence, ["days"]).days)}`;
 
     if (nuevaFila.querySelector(".estado").innerText === "Abonada") {
       nuevaFila.querySelector(".vence").textContent = "-"
     } else {
-      if (diferencia <= 0) {
-        nuevaFila.querySelector(".vence").textContent = objetoVence.toLocaleString() + " Faltan: " + diferencia * (-1);
-        nuevaFila.querySelector(".vence").classList.remove("table-danger");
-        nuevaFila.querySelector(".vence").classList.add("table-success");
-      } else {
-        nuevaFila.querySelector(".vence").textContent = objetoVence.toLocaleString() + " Pasan: " + diferencia;
-        nuevaFila.querySelector(".vence").classList.remove("table-success");
-        nuevaFila.querySelector(".vence").classList.add("table-danger");
-      }
+      nuevaFila.querySelector(".vence").textContent = `${objetoVence.toLocaleString()} (hace ${diferencia} días)`;
+      nuevaFila.querySelector(".vence").classList.remove("table-success");
+      nuevaFila.querySelector(".vence").classList.add("table-danger");
     }
 
     //Estado Factura abonada
     if (nuevaFila.querySelector(".estado").innerText === "Abonada") {
       nuevaFila.querySelector(".estado").classList.remove("table-danger");
       nuevaFila.querySelector(".estado").classList.add("table-success");
+      nuevaFila.querySelector(".estado").textContent = "Abonada";
     } else {
       nuevaFila.querySelector(".estado").classList.add("table-danger");
       nuevaFila.querySelector(".estado").classList.remove("table-success");
+      nuevaFila.querySelector(".estado").textContent = "Pendiente";
     }
 
     resultadoTotal = resultadoTotal + parseInt(`${Math.round((factura.tipoIva * factura.base) / 100)}`) + factura.base;
-    ivaTotal = ivaTotal + parseInt(`${Math.round((factura.tipoIva * factura.base) / 100)}`);
-    baseTotal = baseTotal + parseInt(factura.base);
+    ivaTotal += parseInt(`${Math.round((factura.tipoIva * factura.base) / 100)}`);
+    baseTotal += parseInt(factura.base);
 
     document.querySelector(".lista-facturas").append(nuevaFila);
   }
 
-  document.querySelector(".resultado-total").innerText = resultadoTotal + "€";
-  document.querySelector(".iva-total").innerText = ivaTotal + "€";
-  document.querySelector(".base-total").innerText = baseTotal + "€";
+  document.querySelector(".resultado-total").innerText = `${resultadoTotal}€`;
+  document.querySelector(".iva-total").innerText = `${ivaTotal}€`;
+  document.querySelector(".base-total").innerText = `${baseTotal}€`;
 }
 
 // crear fila "dummy"
 const listaMolde = document.querySelector(".lista-dummy");
 // listaMolde.textContent = "";
-
 listaMolde.classList.add("off");
 document.querySelector(".lista-facturas").textContent = "";
-
-const fecha = new Date("2016-05-25T09:08:34.123+06:00");
-const fechaObjeto = luxon.DateTime.fromISO(fecha);
-
-const ts = new Date().getTime(); // 1516717417146
-const dt = luxon.DateTime.fromMillis(ts); // { ts: 2018-01-23T09:23:37.146-05:00 ...
