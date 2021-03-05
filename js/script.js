@@ -33,11 +33,11 @@ async function devolverFactuas() {
     if (nuevaFila.querySelector(".estado").innerText === "true") {
       nuevaFila.querySelector(".vence").textContent = "-";
     } else if (diferencia <= 0) {
-      nuevaFila.querySelector(".vence").textContent = `${objetoVence.toLocaleString()} Faltan: ${diferencia * (-1)}`;
+      nuevaFila.querySelector(".vence").textContent = `${objetoVence.toLocaleString()} (faltan ${diferencia * (-1)} días)`;
       nuevaFila.querySelector(".vence").classList.remove("table-danger");
       nuevaFila.querySelector(".vence").classList.add("table-success");
     } else {
-      nuevaFila.querySelector(".vence").textContent = `${objetoVence.toLocaleString()} Pasan: ${diferencia}`;
+      nuevaFila.querySelector(".vence").textContent = `${objetoVence.toLocaleString()} (hace ${diferencia} días)`;
       nuevaFila.querySelector(".vence").classList.remove("table-success");
       nuevaFila.querySelector(".vence").classList.add("table-danger");
     }
